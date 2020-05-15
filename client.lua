@@ -40,9 +40,8 @@ Citizen.CreateThread(function()
 		local isInMarker, currentZone = false
 
         for k = 1, #Config.shops do 
-            local VectorCoords = vector3(coords)
             local ShopCoords = vector3(Config.shops[k]["x"], Config.shops[k]["y"], Config.shops[k]["z"])
-            local distance = Vdist(ShopCoords, VectorCoords)
+	    local distance = #(coords - ShopCoords)
             if distance < 1.5 then
                 isInMarker  = true
                 currentZone = 'butcher'
