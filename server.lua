@@ -10,18 +10,12 @@ AddEventHandler("cryptos_butcher:giveitem", function(item, amount)
 	data.addItem(_source, item, amount)
 end)
 
-RegisterServerEvent("cryptos_butcher:givexp")
-AddEventHandler("cryptos_butcher:givexp", function(item)
+RegisterServerEvent("cryptos_butcher:reward")
+AddEventHandler("cryptos_butcher:reward", function(amount, xp)
 	local _source = source
+	local _amount = tonumber(string.format("%.2f", amount))
 	TriggerEvent('redemrp:getPlayerFromId', _source, function(user)
-		user.addXP(item)
-	end)
-end)
-
-RegisterServerEvent("cryptos_butcher:givemoney")
-AddEventHandler("cryptos_butcher:givemoney", function(price)
-	local _source = source
-	TriggerEvent('redemrp:getPlayerFromId', _source, function(user)
-		user.addMoney(price)
+		user.addMoney(_amount)
+		user.addXP(xp)
 	end)
 end)
