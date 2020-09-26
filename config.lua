@@ -5,7 +5,7 @@ Config.Animal = {
     [2] =  {["name"] = "Big Horn Ram",             ["model"] = -15687816381, ["item"] = "biggame",  ["poor"] = 1796037447,  ["good"] = -476045512,  ["perfect"] = 1795984405,  ["reward"] = 2.5, ["xp"] = 2.5 },
     [3] =  {["name"] = "Boar",                     ["model"] = 2028722809,   ["item"] = "biggame",  ["poor"] = 1248540072,  ["good"] = nil,         ["perfect"] = -1858513856, ["reward"] = 3, ["xp"] = 3 },
     [4] =  {["name"] = "Buck",                     ["model"] = -1963605336,  ["item"] = "venison",  ["poor"] = 1603936352,  ["good"] = -868657362,  ["perfect"] = -702790226,  ["reward"] = 1.25, ["xp"] = 1.25 },
-    [5] =  {["name"] = "Bison",                    ["model"] = 2028722809,   ["item"] = "biggame",  ["poor"] = -1730060063, ["good"] = -591117838,  ["perfect"] = -237756948,  ["reward"] = 4, ["xp"] = 4 },
+    [5] =  {["name"] = "Bison",                    ["model"] = 1556473961,   ["item"] = "biggame",  ["poor"] = -1730060063, ["good"] = -591117838,  ["perfect"] = -237756948,  ["reward"] = 4, ["xp"] = 4 },
     [6] =  {["name"] = "Bull",                     ["model"] = 195700131,    ["item"] = "biggame",  ["poor"] = 9293261,     ["good"] = -336086818,  ["perfect"] = -53270317,   ["reward"] = 3, ["xp"] = 3 },
     [7] =  {["name"] = "Deer",                     ["model"] = 1110710183,   ["item"] = "venison",  ["poor"] = -662178186,  ["good"] = -1827027577, ["perfect"] = -1035515486, ["reward"] = 2.5, ["xp"] = 2.5 },
     [8] =  {["name"] = "Duck",                     ["model"] = -1003616053,  ["item"] = "bird",     ["poor"] = nil,         ["good"] = nil,         ["perfect"] = nil,         ["reward"] = 1, ["xp"] = 1 },
@@ -67,17 +67,22 @@ Config.Animal = {
     [64] = {["name"] = "Alligator",                ["model"] = -1892280447,  ["item"] = "biggame",  ["poor"] = 1806153689,  ["good"] = -802026654,  ["perfect"] = -1625078531, ["reward"] = 4, ["xp"] = 4 },
     [65] = {["name"] = "North American Beaver",    ["model"] = 759906147,    ["item"] = "game",     ["poor"] = -1569450319, ["good"] = -2059726619, ["perfect"] = 854596618,   ["reward"] = 2, ["xp"] = 2 },
     [66] = {["name"] = "American Black Bear",      ["model"] = 730092646,    ["item"] = "biggame",  ["poor"] = 1083865179,  ["good"] = 1490032862,  ["perfect"] = 663376218,   ["reward"] = 4, ["xp"] = 4 },
+
+    [67] = {["name"] = "Longnose Gar",             ["model"] = -711779521,   ["item"] = "fish",     ["poor"] = nil,         ["good"] = nil,         ["perfect"] = nil,         ["reward"] = 0.3,  ["xp"] = 4  },
+    [68] = {["name"] = "Muskie",                   ["model"] = -1553593715,  ["item"] = "fish",     ["poor"] = nil,         ["good"] = nil,         ["perfect"] = nil,         ["reward"] = 0.3,  ["xp"] = 4  },
+    [69] = {["name"] = "Lake Sturgeon",            ["model"] = -300867788,   ["item"] = "fish",     ["poor"] = nil,         ["good"] = nil,         ["perfect"] = nil,         ["reward"] = 0.3,  ["xp"] = 4  },
+    [70] = {["name"] = "Channel Catfish",          ["model"] = 1538187374,   ["item"] = "fish",     ["poor"] = nil,         ["good"] = nil,         ["perfect"] = nil,         ["reward"] = 0.3,  ["xp"] = 4  },
+    [71] = {["name"] = "Northern Pike",            ["model"] = 697075200,    ["item"] = "fish",     ["poor"] = nil,         ["good"] = nil,         ["perfect"] = nil,         ["reward"] = 0.25, ["xp"] = 4  },
 }
 
 
-
 Config.shops = {
-    {["name"] = "Saint Denis",["x"] = 2816.37,  ["y"] = -1322.24, ["z"] = 46.61, ["gain"] = 1.11,},
-    {["name"] = "Valentine",  ["x"] = -341.07,  ["y"] = 767.35, ["z"] = 116.71, ["gain"] = 1.11,},
-    {["name"] = "Rhodes",     ["x"] = 1296.36,  ["y"] = -1279.26, ["z"] = 75.84, ["gain"] = 1.11,},
-    {["name"] = "Tumbleweed", ["x"] = -5508.10, ["y"] = -2947.73, ["z"] = -1.87, ["gain"] = 1.11,},
-    -- {["name"] = "Anusburg",   ["x"] = 2932.54,  ["y"] = 1302.00,["z"] = 44.48, ["gain"] = 1.11,},
-    -- {["name"] = "Van Horn",   ["x"] = 2994.23,  ["y"] = 571.79,["z"] = 44.35, ["gain"] = 1.33,},
-    {["name"] = "Blackwater", ["x"] = -877.19,  ["y"] = -1343.62,["z"] = 43.29, ["gain"] = 1.11,},
-    {["name"] = "Strawberry", ["x"] = -1752.91,  ["y"] = -394.74,["z"] = 156.19, ["gain"] = 1.11,}
+    {["name"] = "Saint Denis",["coords"] = vector3(2816.37, -1322.24, 46.61), ["gain"] = 1.11,},
+    {["name"] = "Valentine", ["coords"] = vector3(-341.07, 767.35, 116.71), ["gain"] = 1.11,},
+    {["name"] = "Rhodes", ["coords"] = vector3(1296.36, -1279.26, 75.84), ["gain"] = 1.11,},
+    {["name"] = "Tumbleweed", ["coords"] = vector3(-5508.10, -2947.73, -1.87), ["gain"] = 1.11,},
+    -- {["name"] = "Anusburg", ["coords"] = vector3(2932.54, 1302.00, 44.48), ["gain"] = 1.11,},
+    -- {["name"] = "Van Horn", ["coords"] = vector3(2994.23, 571.79, 44.35), ["gain"] = 1.33,},
+    {["name"] = "Blackwater", ["coords"] = vector3(-877.19, -1343.62, 43.29), ["gain"] = 1.11,},
+    {["name"] = "Strawberry", ["coords"] = vector3(-1752.91, -394.74, 156.19), ["gain"] = 1.11,}
 }
