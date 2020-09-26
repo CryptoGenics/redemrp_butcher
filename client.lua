@@ -1,62 +1,51 @@
-local active = false
 local ButcherPrompt
-local hasAlreadyEnteredMarker, lastZone
+local hasAlreadyEnteredMarker
 local currentZone = nil
+
+local PromptGorup = GetRandomIntInRange(0, 0xffffff)
 
 function SetupButcherPrompt()
     Citizen.CreateThread(function()
-        local str = 'Sell to butcher'
+        local str = 'Sell Item'
         ButcherPrompt = PromptRegisterBegin()
         PromptSetControlAction(ButcherPrompt, 0xE8342FF2)
         str = CreateVarString(10, 'LITERAL_STRING', str)
         PromptSetText(ButcherPrompt, str)
-        PromptSetEnabled(ButcherPrompt, false)
-        PromptSetVisible(ButcherPrompt, false)
+        PromptSetEnabled(ButcherPrompt, true)
+        PromptSetVisible(ButcherPrompt, true)
         PromptSetHoldMode(ButcherPrompt, true)
+        PromptSetGroup(ButcherPrompt, PromptGorup)
         PromptRegisterEnd(ButcherPrompt)
     end)
 end
 
-AddEventHandler('cryptos_butcher:hasEnteredMarker', function(zone)
-	currentZone     = zone
-end)
-
-AddEventHandler('cryptos_butcher:hasExitedMarker', function(zone)
-    if active == true then
-        PromptSetEnabled(ButcherPrompt, false)
-        PromptSetVisible(ButcherPrompt, false)
-        active = false
-    end
-	currentZone = nil
-end)
-
--- Enter / Exit marker events
 Citizen.CreateThread(function()
     SetupButcherPrompt()
 	while true do
-		Citizen.Wait(0)
+		Wait(500)
+		local isInMarker, tempZone = false
         local ped = PlayerPedId()
         local coords = GetEntityCoords(ped)
-		local isInMarker, currentZone = false
 
-        for k = 1, #Config.shops do 
-            local ShopCoords = vector3(Config.shops[k]["x"], Config.shops[k]["y"], Config.shops[k]["z"])
-	    local distance = #(coords - ShopCoords)
+        for _,v in pairs(Config.shops) do 
+            local distance = #(coords - v.coords)
             if distance < 1.5 then
-                isInMarker  = true
-                currentZone = 'butcher'
-                lastZone    = 'butcher'
+                local holding = Citizen.InvokeNative(0xD806CD2A4F2C2996, ped)
+                if holding ~= false then
+                    isInMarker  = true
+                    tempZone = 'butcher'
+                end
             end
 		end
 
 		if isInMarker and not hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = true
-			TriggerEvent('cryptos_butcher:hasEnteredMarker', currentZone)
+			currentZone = tempZone
 		end
 
 		if not isInMarker and hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = false
-			TriggerEvent('cryptos_butcher:hasExitedMarker', lastZone)
+			currentZone = nil
 		end
 	end
 end)
@@ -67,18 +56,12 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
         if currentZone then
-            if active == false then
-                PromptSetEnabled(ButcherPrompt, true)
-                PromptSetVisible(ButcherPrompt, true)
-                active = true
-            end
+            local label  = CreateVarString(10, 'LITERAL_STRING', "Butcher")
+            PromptSetActiveGroupThisFrame(PromptGorup, label)
             if PromptHasHoldModeCompleted(ButcherPrompt) then
-				if currentZone == 'butcher' then
-                    Selltobutcher()
-                    PromptSetEnabled(ButcherPrompt, false)
-                    PromptSetVisible(ButcherPrompt, false)
-                    active = false
-				end
+                Selltobutcher()
+                PromptSetEnabled(ButcherPrompt, false)
+                PromptSetVisible(ButcherPrompt, false)
 
 				currentZone = nil
 			end
@@ -88,13 +71,26 @@ Citizen.CreateThread(function()
 	end
 end)
 
+function DeleteThis(holding)
+    NetworkRequestControlOfEntity(holding)
+    SetEntityAsMissionEntity(holding, true, true)
+    Wait(100)
+    DeleteEntity(holding)
+    Wait(500)
+    local entitycheck = Citizen.InvokeNative(0xD806CD2A4F2C2996, PlayerPedId())
+    local holdingcheck = GetPedType(entitycheck)
+    if holdingcheck == 0 then
+        return true
+    else
+        return false
+    end
+end
+
 function Selltobutcher()
     local ped = PlayerPedId()
     local coords = GetEntityCoords(ped)
     for k = 1, #Config.shops do 
-        local VectorCoords = vector3(coords)
-        local ShopCoords = vector3(Config.shops[k]["x"], Config.shops[k]["y"], Config.shops[k]["z"])
-        local distance = Vdist(ShopCoords, VectorCoords)
+        local distance = #(Config.shops[k]["coords"] - coords)
         if distance < 3.0 then
             local holding = Citizen.InvokeNative(0xD806CD2A4F2C2996, ped)
             local quality = Citizen.InvokeNative(0x31FEF6A20F00B963, holding)
@@ -104,22 +100,14 @@ function Selltobutcher()
                 for i, row in pairs(Config.Animal) do
                     if type == 28 then
                         if model == Config.Animal[i]["model"] then
-
                             local reward = Config.shops[k]["gain"] * Config.Animal[i]["reward"]
                             local level = Config.shops[k]["gain"] * Config.Animal[i]["xp"]
 
-                            SetEntityAsMissionEntity(holding, true, true)
-                            Wait(100)
-                            DeleteEntity(holding)
-                            Wait(500)
-
-                            local entitycheck = Citizen.InvokeNative(0xD806CD2A4F2C2996, PlayerPedId())
-                            local holdingcheck = GetPedType(entitycheck)
+                            local deleted = DeleteThis(holding)
             
-                            if holdingcheck == 0 then
+                            if deleted then
                                 TriggerServerEvent("cryptos_butcher:giveitem", Config.Animal[i]["item"], 1)
-                                TriggerServerEvent("cryptos_butcher:givemoney", reward)
-                                TriggerServerEvent("cryptos_butcher:givexp", level)
+                                TriggerServerEvent("cryptos_butcher:reward", reward, level)
                                 TriggerEvent("redemrp_notification:start", "You earned $" .. reward .. ", " .. level .. " xp and " .. Config.Animal[i]["item"] .. ' Meat', 5, "success")
                             else
                                 TriggerEvent("redemrp_notification:start", "DELETE ENTITY NATIVE IS SCUFFED - RELOG PLZ", 2, "success")
@@ -135,16 +123,10 @@ function Selltobutcher()
                             local reward = rewardresult * 0.5
                             local level = levelresult * 0.5
 
-                            SetEntityAsMissionEntity(holding, true, true)
-                            Wait(100)
-                            DeleteEntity(holding)
-                            Wait(500)
-
-                            local entitycheck = Citizen.InvokeNative(0xD806CD2A4F2C2996, PlayerPedId())
-                            local holdingcheck = Citizen.InvokeNative(0x31FEF6A20F00B963, holding)           
-                            if holdingcheck == false then
-                                TriggerServerEvent("cryptos_butcher:givemoney", reward)
-                                TriggerServerEvent("cryptos_butcher:givexp", level)
+                            local deleted = DeleteThis(holding)
+            
+                            if deleted then
+                                TriggerServerEvent("cryptos_butcher:reward", reward, level)
                                 TriggerEvent("redemrp_notification:start", "You earned $" .. reward .. " and " .. level .. " xp", 5, "success")
                             else
                                 TriggerEvent("redemrp_notification:start", "DELETE ENTITY NATIVE IS SCUFFED - RELOG PLZ", 2, "success")
@@ -157,16 +139,10 @@ function Selltobutcher()
                             local reward = rewardresult * 0.75
                             local level = levelresult * 0.75
 
-                            SetEntityAsMissionEntity(holding, true, true)
-                            Wait(100)
-                            DeleteEntity(holding)
-                            Wait(500)
-
-                            local entitycheck = Citizen.InvokeNative(0xD806CD2A4F2C2996, PlayerPedId())
-                            local holdingcheck = Citizen.InvokeNative(0x31FEF6A20F00B963, holding)          
-                            if holdingcheck == false then
-                                TriggerServerEvent("cryptos_butcher:givemoney", reward)
-                                TriggerServerEvent("cryptos_butcher:givexp", level)
+                            local deleted = DeleteThis(holding)
+            
+                            if deleted then
+                                TriggerServerEvent("cryptos_butcher:reward", reward, level)
                                 TriggerEvent("redemrp_notification:start", "You earned $" .. reward .. " and " .. level .. " xp", 5, "success")
                             else
                                 TriggerEvent("redemrp_notification:start", "DELETE ENTITY NATIVE IS SCUFFED - RELOG PLZ", 2, "success")
@@ -177,16 +153,10 @@ function Selltobutcher()
                             local reward = Config.shops[k]["gain"] * Config.Animal[i]["reward"]
                             local level = Config.shops[k]["gain"] * Config.Animal[i]["xp"]
 
-                            SetEntityAsMissionEntity(holding, true, true)
-                            Wait(100)
-                            DeleteEntity(holding)
-                            Wait(500)
-
-                            local entitycheck = Citizen.InvokeNative(0xD806CD2A4F2C2996, PlayerPedId())
-                            local holdingcheck = Citizen.InvokeNative(0x31FEF6A20F00B963, holding)           
-                            if holdingcheck == false then
-                                TriggerServerEvent("cryptos_butcher:givemoney", reward)
-                                TriggerServerEvent("cryptos_butcher:givexp", level)
+                            local deleted = DeleteThis(holding)
+            
+                            if deleted then
+                                TriggerServerEvent("cryptos_butcher:reward", reward, level)
                                 TriggerEvent("redemrp_notification:start", "You earned $" .. reward .. " and " .. level .. " xp", 5, "success")
                             else
                                 TriggerEvent("redemrp_notification:start", "DELETE ENTITY NATIVE IS SCUFFED - RELOG PLZ", 2, "success")
