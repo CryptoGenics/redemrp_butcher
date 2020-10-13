@@ -13,9 +13,9 @@ AddEventHandler("cryptos_butcher:giveitem", function(item, amount)
 		local ItemInfo = data.getItemData(item)
 		local ItemData = data.getItem(_source, item)
 		if ItemData.ItemAmount >= ItemInfo.limit then
-			ItemData.AddItem(amount)
-		else
 			TriggerClientEvent("redemrp_notification:start", _source, "You already have to many "..item, 2, "error")
+		else
+			ItemData.AddItem(amount)
 		end
 	end
 end)
