@@ -1,5 +1,7 @@
 Config = {}
 
+Config.Redemrp_Inventory2 = false
+
 Config.Animal = {
     [1] =  {["name"] = "Bear",                     ["model"] = -1124266369,  ["item"] = "biggame",  ["poor"] = 957520252,   ["good"] = 143941906,   ["perfect"] = 1292673537,  ["reward"] = 3, ["xp"] = 3 },
     [2] =  {["name"] = "Big Horn Ram",             ["model"] = -15687816381, ["item"] = "biggame",  ["poor"] = 1796037447,  ["good"] = -476045512,  ["perfect"] = 1795984405,  ["reward"] = 2.5, ["xp"] = 2.5 },

@@ -7,7 +7,17 @@ end)
 RegisterServerEvent("cryptos_butcher:giveitem")
 AddEventHandler("cryptos_butcher:giveitem", function(item, amount)
 	local _source = source
-	data.addItem(_source, item, amount)
+	if Config.Redemrp_Inventory2 == false then
+		data.addItem(_source, item, amount)
+	elseif Config.Redemrp_Inventory2 == true then
+		local ItemInfo = data.getItemData(item)
+		local ItemData = data.getItem(_source, item)
+		if ItemData.ItemAmount >= ItemInfo.limit then
+			ItemData.AddItem(amount)
+		else
+			TriggerClientEvent("redemrp_notification:start", _source, "You already have to many "..item, 2, "error")
+		end
+	end
 end)
 
 RegisterServerEvent("cryptos_butcher:reward")

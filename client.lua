@@ -60,9 +60,6 @@ Citizen.CreateThread(function()
             PromptSetActiveGroupThisFrame(PromptGorup, label)
             if PromptHasHoldModeCompleted(ButcherPrompt) then
                 Selltobutcher()
-                PromptSetEnabled(ButcherPrompt, false)
-                PromptSetVisible(ButcherPrompt, false)
-
 				currentZone = nil
 			end
         else
