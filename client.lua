@@ -11,11 +11,25 @@ function SetupButcherPrompt()
         PromptSetControlAction(ButcherPrompt, 0xE8342FF2)
         str = CreateVarString(10, 'LITERAL_STRING', str)
         PromptSetText(ButcherPrompt, str)
-        PromptSetEnabled(ButcherPrompt, true)
-        PromptSetVisible(ButcherPrompt, true)
+        PromptSetEnabled(ButcherPrompt, false)
+        PromptSetVisible(ButcherPrompt, false)
         PromptSetHoldMode(ButcherPrompt, true)
         PromptSetGroup(ButcherPrompt, PromptGorup)
         PromptRegisterEnd(ButcherPrompt)
+    end)
+end
+
+local blip = {}
+
+if Config.Blips == true then
+    Citizen.CreateThread(function()
+        for _, info in pairs(Config.shops) do
+            local number = #blip + 1
+            blip[number] = N_0x554d9d53f696d002(1664425300, info.coords.x, info.coords.y, info.coords.z)
+            SetBlipSprite(blip[number], -1665418949, 1)
+            SetBlipScale(blip[number], 0.2)
+            Citizen.InvokeNative(0x9CB1A1623062F402, blip[number], 'Butcher')
+        end  
     end)
 end
 
@@ -168,3 +182,13 @@ function Selltobutcher()
         end
     end
 end
+
+AddEventHandler('onResourceStop', function(resource)
+    if resource == GetCurrentResourceName() then
+        PromptSetEnabled(ButcherPrompt, false)
+        PromptSetVisible(ButcherPrompt, false)
+        for k,v in pairs(blip) do
+            RemoveBlip(blip[k])
+        end
+    end
+end)
