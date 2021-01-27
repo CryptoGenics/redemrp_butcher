@@ -1,6 +1,7 @@
 Config = {}
 
 Config.Redemrp_Inventory2 = false
+Config.Blips = true
 
 Config.Animal = {
     [1] =  {["name"] = "Bear",                     ["model"] = -1124266369,  ["item"] = "biggame",  ["poor"] = 957520252,   ["good"] = 143941906,   ["perfect"] = 1292673537,  ["reward"] = 3, ["xp"] = 3 },
