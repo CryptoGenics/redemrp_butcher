@@ -1,6 +1,8 @@
 # redemrp_butcher
 Butcher table locations made to sell pelts/carcasses with redem_roleplay framework.
 
+When holding a pelt or a carcass at a butcher location, recieve a native prompt to sell the item to the butcher.
+
 # Installation
 1. Clone this repository.
 2. Extract the zip.
