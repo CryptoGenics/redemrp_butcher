@@ -13,6 +13,7 @@ When holding a pelt or a carcass at a butcher location, recieve a native prompt 
 
 # Required resource
 - redem_roleplay
+- redemrp_inventory
 - redemrp_notification
 
 # Made by
