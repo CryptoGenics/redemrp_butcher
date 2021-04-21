@@ -1,6 +1,7 @@
 Config = {}
 
 Config.Redemrp_Inventory2 = false
+Config.Redemrp_Inventory1 = true
 Config.Blips = true
 
 Config.Animal = {
