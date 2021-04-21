@@ -7,7 +7,7 @@ end)
 RegisterServerEvent("cryptos_butcher:giveitem")
 AddEventHandler("cryptos_butcher:giveitem", function(item, amount)
 	local _source = source
-	if Config.Redemrp_Inventory2 == false then
+	if Config.Redemrp_Inventory1 == true then
 		data.addItem(_source, item, amount)
 	elseif Config.Redemrp_Inventory2 == true then
 		local ItemInfo = data.getItemData(item)
@@ -17,6 +17,8 @@ AddEventHandler("cryptos_butcher:giveitem", function(item, amount)
 		else
 			ItemData.AddItem(amount)
 		end
+	else
+		print('must use redemrp_inventory')	
 	end
 end)
 
