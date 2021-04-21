@@ -18,7 +18,7 @@ AddEventHandler("cryptos_butcher:giveitem", function(item, amount)
 			ItemData.AddItem(amount)
 		end
 	else
-		print('must use redemrp_inventory')	
+		print('must use redemrp_inventory with redemrp_butcher')	
 	end
 end)
 
